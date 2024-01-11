@@ -1,1 +1,2 @@
-
+Has a login page and a signup page and they both share the same styling page, only difference being some small html details like the 
+contents of the header, the abscence of some additional features from the signup page etc etc
