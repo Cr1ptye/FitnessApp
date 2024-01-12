@@ -3,10 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness App</title>
     <link href="styles.css" rel="stylesheet">
-    <title>Extra Rep Fitness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1></h1>
+    <header>
+        <h1>Iron Core Fitness</h1>
+    </header>
+
+    <section id="workout-tracker">
+        
+        <div id="progressPopup" class="progress-popup"></div>
+        <h2>Workout Tracker</h2>
+
+        <!-- Goal Setting -->
+        <form id="goalForm">
+            <label for="goal">Fitness Goal:</label>
+            <input type="text" id="goal">
+            <button type="button" onclick="setGoal()">Set Goal</button>
+        </form>
+
+        <!-- Scheduling and Reminding -->
+        <form id="scheduleForm">
+            <label for="scheduleDate">Scheduled Date:</label>
+            <input type="date" id="scheduleDate">
+            <label for="scheduleTime">Scheduled Time:</label>
+            <input type="time" id="scheduleTime">
+            <button type="button" onclick="scheduleReminder()">Schedule & Remind</button>
+        </form>
+
+        <!-- Workout Form and List -->
+        <form id="workoutForm">
+            <label for="exercise">Exercise:</label>
+            <input type="text" id="exercise" required>
+            <label for="sets">Sets:</label>
+            <input type="number" id="sets" required>
+            <label for="reps">Reps:</label>
+            <input type="number" id="reps" required>
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" required>
+            <button type="button" onclick="trackWorkout()">Track Workout</button>
+        </form>
+
+        <ul id="workoutList">
+            <!-- Workout entries will be added here dynamically -->
+        </ul>
+
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/twilio@3.76.0/dist/twilio.js"></script>
+
+    <script>
+        let completedSets = 0;
+
+        function showProgressMessage(message) {
+            const progressPopup = document.getElementById('progressPopup');
+            progressPopup.textContent = message;
+            progressPopup.style.display = 'block';
+
+            // Hide the popup after a short delay
+            setTimeout(() => {
+                progressPopup.style.display = 'none';
+            }, 1500); // Adjust the delay as needed
+        }
+
+        function trackWorkout() {
+            const exercise = document.getElementById('exercise').value;
+            const sets = document.getElementById('sets').value;
+            const reps = document.getElementById('reps').value;
+            const weight = document.getElementById('weight').value;
+
+            const workoutEntry = document.createElement('li');
+            workoutEntry.textContent = `${exercise} - ${sets} sets x ${reps} reps. (${weight} kilograms)`;
+
+            document.getElementById('workoutList').appendChild(workoutEntry);
+
+            // Update the completed sets counter
+            completedSets += parseInt(sets);
+
+            // Show a progress message
+            const goal = document.getElementById('goal').value;
+            const progressMessage = `You've completed ${completedSets} out of ${goal} sets!`;
+            showProgressMessage(progressMessage);
+        }
+
+        function setGoal() {
+            const goal = document.getElementById('goal').value;
+            alert(`Fitness Goal Set: ${goal}`);
+            // You can store the goal in local storage or send it to a server for more persistence.
+        }
+
+        const accountSid = 'AC5b8dd3d811e9ba420aa506c9bef5f4b0';
+        const authToken = '4d6db9665c8bb4d717f739449ce8a997';
+        const twilioPhoneNumber = '+15128510668';
+
+        const twilioClient = new Twilio(accountSid, authToken);
+
+        function scheduleReminder() {
+            const scheduleDate = document.getElementById('scheduleDate').value;
+            const scheduleTime = document.getElementById('scheduleTime').value;
+            const phoneNumber = '+12899240485';
+
+            const scheduledDateTime = new Date(`${scheduleDate}T${scheduleTime}`);
+            const now = new Date();
+
+            if (scheduledDateTime > now) {
+                const timeDifference = scheduledDateTime - now;
+
+                // Use setTimeout to trigger the reminder when the scheduled time is met
+                setTimeout(() => {
+                    const goal = document.getElementById('goal').value;
+                    const message = 'Get a move on! Its your scheduled time!';
+                    
+                    // Send SMS using Twilio
+                    twilioClient.messages.create({
+                        body: message,
+                        from: twilioPhoneNumber,
+                        to: phoneNumber
+                    }).then(message => console.log(`Message sent with SID: ${message.sid}`))
+                    .catch(error => console.error(`Error sending message: ${error.message}`));
+                }, timeDifference);
+                
+                alert(`Reminder scheduled for ${scheduleDate} at ${scheduleTime}`);
+            } else {
+                alert("Please choose a future date and time for the reminder.");
+            }
+    }
+
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/twilio@3.66.0/dist/twilio.js"></script>
 </body>
 </html>
