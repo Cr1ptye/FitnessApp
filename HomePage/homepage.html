@@ -94,16 +94,16 @@
             // You can store the goal in local storage or send it to a server for more persistence.
         }
 
-        const accountSid = 'AC5b8dd3d811e9ba420aa506c9bef5f4b0';
-        const authToken = '4d6db9665c8bb4d717f739449ce8a997';
-        const twilioPhoneNumber = '+15128510668';
+        const accountSid = myAccountSid;
+        const authToken = myAuthToken;
+        const twilioPhoneNumber = myTwilioPhoneNUmber;
 
         const twilioClient = new Twilio(accountSid, authToken);
 
         function scheduleReminder() {
             const scheduleDate = document.getElementById('scheduleDate').value;
             const scheduleTime = document.getElementById('scheduleTime').value;
-            const phoneNumber = '+12899240485';
+            const phoneNumber = '+1234567890';
 
             const scheduledDateTime = new Date(`${scheduleDate}T${scheduleTime}`);
             const now = new Date();
