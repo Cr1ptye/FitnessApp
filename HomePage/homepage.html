@@ -94,43 +94,6 @@
             // You can store the goal in local storage or send it to a server for more persistence.
         }
 
-        const accountSid = myAccountSid;
-        const authToken = myAuthToken;
-        const twilioPhoneNumber = myTwilioPhoneNUmber;
-
-        const twilioClient = new Twilio(accountSid, authToken);
-
-        function scheduleReminder() {
-            const scheduleDate = document.getElementById('scheduleDate').value;
-            const scheduleTime = document.getElementById('scheduleTime').value;
-            const phoneNumber = '+1234567890';
-
-            const scheduledDateTime = new Date(`${scheduleDate}T${scheduleTime}`);
-            const now = new Date();
-
-            if (scheduledDateTime > now) {
-                const timeDifference = scheduledDateTime - now;
-
-                // Use setTimeout to trigger the reminder when the scheduled time is met
-                setTimeout(() => {
-                    const goal = document.getElementById('goal').value;
-                    const message = 'Get a move on! Its your scheduled time!';
-                    
-                    // Send SMS using Twilio
-                    twilioClient.messages.create({
-                        body: message,
-                        from: twilioPhoneNumber,
-                        to: phoneNumber
-                    }).then(message => console.log(`Message sent with SID: ${message.sid}`))
-                    .catch(error => console.error(`Error sending message: ${error.message}`));
-                }, timeDifference);
-                
-                alert(`Reminder scheduled for ${scheduleDate} at ${scheduleTime}`);
-            } else {
-                alert("Please choose a future date and time for the reminder.");
-            }
-    }
-
     </script>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
